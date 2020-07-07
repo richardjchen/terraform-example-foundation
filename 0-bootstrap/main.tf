@@ -43,8 +43,8 @@ resource "google_folder" "seed" {
 }
 
 module "seed_bootstrap" {
-  source                  = "terraform-google-modules/bootstrap/google"
-  version                 = "~> 1.0"
+  source = "github.com/terraform-google-modules/terraform-google-bootstrap"
+  # version                 = "~> 1.0"
   org_id                  = var.org_id
   folder_id               = google_folder.seed.id
   billing_account         = var.billing_account
@@ -53,6 +53,8 @@ module "seed_bootstrap" {
   default_region          = var.default_region
   org_project_creators    = var.org_project_creators
   sa_enable_impersonation = true
+  parent_folder           = var.parent_folder == "" ? "" : local.parent
+  skip_gcloud_download    = var.skip_gcloud_download
 
   activate_apis = [
     "serviceusage.googleapis.com",
@@ -85,8 +87,8 @@ module "seed_bootstrap" {
 }
 
 module "cloudbuild_bootstrap" {
-  source                  = "terraform-google-modules/bootstrap/google//modules/cloudbuild"
-  version                 = "~> 1.0"
+  source = "github.com/terraform-google-modules/terraform-google-bootstrap//modules/cloudbuild"
+  # version                 = "~> 1.0"
   org_id                  = var.org_id
   folder_id               = google_folder.seed.id
   billing_account         = var.billing_account
@@ -96,4 +98,5 @@ module "cloudbuild_bootstrap" {
   terraform_sa_name       = module.seed_bootstrap.terraform_sa_name
   terraform_state_bucket  = module.seed_bootstrap.gcs_bucket_tfstate
   sa_enable_impersonation = true
+  skip_gcloud_download    = var.skip_gcloud_download
 }
