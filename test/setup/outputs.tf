@@ -36,3 +36,15 @@ output "terraform_sa_email" {
 output "org_project_creators" {
   value = ["serviceAccount:${google_service_account.int_test.email}"]
 }
+
+output "org_id" {
+  value = var.org_id
+}
+
+output "billing_account" {
+  value = var.billing_account
+}
+
+output "group_email" {
+  value = var.group_email
+}
